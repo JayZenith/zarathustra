@@ -7,6 +7,7 @@ Read:
 - `prepare.py`
 - `train.py`
 - `tools.md`
+- `runtime.md`
 - `program.md`
 
 Goal:
@@ -27,6 +28,7 @@ Paper workflow:
 - Do not browse papers broadly during productive local optimization.
 
 All tool usage should go through `python3 cli.py ...`.
+Use `python3 agent_cycle.py` at the start of each research cycle.
 
 Training workflow:
 - `prepare.py` is fixed. Do not modify it.
