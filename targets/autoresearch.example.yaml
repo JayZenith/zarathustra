@@ -1,0 +1,35 @@
+name: autoresearch
+repo_path: /home/jay-zenith/Desktop/autoresearch
+goal: Minimize validation bits-per-byte within the fixed training budget.
+commands:
+  setup:
+    - uv sync
+    - uv run prepare.py
+  run_experiment:
+    cmd: uv run train.py > run.log 2>&1
+    cwd: /home/jay-zenith/Desktop/autoresearch
+    timeout_sec: 900
+  collect_result:
+    cmd: rg "^(val_bpb|peak_vram_mb):" run.log
+    cwd: /home/jay-zenith/Desktop/autoresearch
+eval:
+  primary_metric:
+    name: val_bpb
+    goal: minimize
+  parser:
+    type: regex_map
+    source: run_experiment
+    patterns:
+      val_bpb: "^val_bpb:\\s+([0-9.]+)"
+      peak_vram_mb: "^peak_vram_mb:\\s+([0-9.]+)"
+constraints:
+  - Only modify train.py
+  - Never modify prepare.py
+  - Do not add dependencies
+notes:
+  - Use target config as the source of repo-specific rules.
+  - Treat benchmark specifics as data, not runtime logic.
+git:
+  mode: branch_experiments
+  branch_prefix: autoresearch/
+  revert_on_regression: true

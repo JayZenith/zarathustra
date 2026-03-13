@@ -1,37 +1,62 @@
 # zarathustra
 
-`zarathustra` is an `autoresearch`-style training repo with stricter research
-memory.
+`zarathustra` is a TypeScript autonomous research-agent runtime.
 
-It directly contains the training target:
+It is built to excel at `autoresearch`-style loops first, without hardcoding a
+single benchmark, repo layout, metric, or evaluation harness into the runtime.
 
-- `prepare.py` — fixed data prep and evaluation
-- `train.py` — mutable training file
+## v1 principles
 
-And it adds:
+- one long-lived main agent
+- canonical brain spec in [`program.md`](./program.md)
+- explicit target attachment via config
+- DB-backed durable memory
+- restart-safe cycle execution
+- strict context discipline: logs and artifacts stay on disk; prompts get only
+  compact slices
+- TypeScript orchestrates all tools; Python stays subordinate
 
-- `experiments.db` for durable experiment memory
-- structured observations and lessons
-- run log parsing
-- targeted paper search/fetch/summarization
+## Layout
 
-## Main files
+```text
+src/
+  cli/        command entrypoints
+  runtime/    loop, state assembly, execution, restart handling
+  memory/     SQLite schema and typed storage
+  targets/    target config parsing and eval rules
+  tools/      shell, file, git, paper, db, python adapters
+  tui/        minimal terminal surface
+  lib/        shared utilities
+targets/      example target configs
+var/          runtime artifacts and caches (gitignored)
+```
 
-- `prepare.py` — fixed training prep/eval
-- `train.py` — the file the agent edits
-- `program.md` — main agent instructions
-- `tools.md` — exact CLI tools and rules
-- `cli.py` — entrypoint for research memory and paper tools
-- `experiment_db.py` — SQLite schema and access layer
-- `agent_cycle.py` — compact view of recent evidence
+## Commands
 
-## Scope
+```bash
+bun install
+bun run build
+bun run src/cli/index.ts attach targets/autoresearch.example.yaml
+bun run src/cli/index.ts run autoresearch
+bun run src/cli/index.ts status
+bun run src/cli/index.ts tui
+```
 
-This project is intentionally narrow:
+## Runtime model
 
-- one training target
-- one mutable training file
-- one experiment database
-- targeted paper use only when needed
+Each cycle:
 
-No UI, no provider abstraction, no generic agent platform.
+1. Load target config and compact state from SQLite.
+2. Render `program.md` plus state into the agent prompt.
+3. Ask the model for a structured action plan.
+4. Execute tool calls through TypeScript adapters.
+5. Store raw output as artifacts, then persist only structured summaries.
+6. Schedule the next cycle and continue until stopped.
+
+## Not in v1
+
+- subagents
+- browser automation
+- distributed workers
+- a web UI
+- benchmark-specific runtime logic
