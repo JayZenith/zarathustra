@@ -31,6 +31,22 @@ python3 loop_controller.py show
 
 7. Repeat.
 
+## External loop
+
+If your agent CLI does not stay alive by itself, use:
+
+```bash
+python3 prompt_builder.py
+python3 agent_runtime.py --agent-cmd 'claude -p "$(cat {prompt_file})"' --cycles 5
+```
+
+This is the narrow runtime glue:
+- refresh state
+- build prompt from repo files
+- invoke the agent CLI
+- let the agent do exactly one cycle
+- repeat
+
 ## Rules
 
 - Always run `python3 agent_cycle.py` before a new edit.

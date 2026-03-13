@@ -11,6 +11,19 @@ python3 agent_cycle.py
 python3 agent_brief.py
 python3 loop_controller.py show
 python3 loop_controller.py refresh
+python3 prompt_builder.py
+```
+
+Run repeated external agent cycles:
+
+```bash
+python3 agent_runtime.py --agent-cmd 'claude -p "$(cat {prompt_file})"' --cycles 3
+```
+
+Or with another CLI:
+
+```bash
+python3 agent_runtime.py --agent-cmd 'codex exec -C {repo_root} "$(cat {prompt_file})"' --cycles 3
 ```
 
 ## Training run

@@ -11,6 +11,11 @@ wheels/
 worktrees/
 results/
 queue/
+run.log
+AGENT_HANDOFF.md
+AGENT_PROMPT.md
+agent_runtime.log
+runtime_state.json
 
 # Agent prompt files (generated per-session by launchers)
 CLAUDE.md
