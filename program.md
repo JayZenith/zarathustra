@@ -13,14 +13,13 @@ Read:
 Goal:
 - keep durable experiment memory
 - record explicit hypotheses and lessons
-- choose better next experiments from evidence
+- support better next experiments from evidence
 
 Focus on:
 1. recording every experiment cleanly
 2. writing what was learned
 3. avoiding repeated failed ideas
-4. proposing the next experiment from evidence
-5. using your own judgment over any heuristic suggestion in the repo
+4. using recent evidence to choose the next experiment yourself
 
 Paper workflow:
 - First query stored paper notes by topic.
@@ -45,6 +44,6 @@ Training workflow:
   - `--lesson`
 
 Decision policy:
-- `rule_engine.py` and `next_experiment.py` provide heuristics, not authority.
-- You may override any suggested action or idea when the evidence supports a better move.
-- The hard requirements are memory, logging, and evidence-based reasoning, not obedience to the heuristics.
+- The repo provides memory, retrieval, and logging.
+- You choose the next experiment from the evidence.
+- The hard requirements are memory, logging, and evidence-based reasoning.

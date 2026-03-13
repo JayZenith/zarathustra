@@ -10,8 +10,7 @@ This is the narrow live loop for the agent.
 python3 agent_cycle.py
 ```
 
-2. Decide the next `train.py` edit from the printed actions.
-   Treat them as suggestions, not commands.
+2. Decide the next `train.py` edit from the printed evidence.
 
 3. Make the edit in `train.py`.
 
@@ -56,4 +55,3 @@ This is the narrow runtime glue:
 - After every run, read `AGENT_HANDOFF.md` or run `python3 agent_cycle.py`.
 - Use paper tools when bottlenecked, missing context, or deepening a promising direction.
 - Keep edits small unless the evidence clearly supports a larger move.
-- Override the rule engine when the evidence contradicts it.

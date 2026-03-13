@@ -4,7 +4,7 @@ Use these commands from `/home/jay-zenith/Desktop/zarathustra`.
 
 ## Agent glue
 
-Print the current research state and next actions:
+Print the current research state:
 
 ```bash
 python3 agent_cycle.py
@@ -54,8 +54,6 @@ python3 cli.py log-experiment --commit abc1234 --val-bpb 1.041706 --memory-gb 30
 
 ```bash
 python3 cli.py recent
-python3 cli.py next-experiment
-python3 cli.py decide
 ```
 
 ## Research notes
@@ -88,10 +86,7 @@ python3 cli.py paper-fetch-store --url "https://arxiv.org/abs/2401.00001" --topi
 
 ## Rules
 
-- Use `python3 cli.py decide` after each experiment block.
 - Prefer `python3 agent_cycle.py` as the main entrypoint for the live loop.
-- Treat `decide` and `next-experiment` as heuristics.
-- If decision is `exploit`, staying local is usually right, but not mandatory.
-- If decision is `read_notes`, query stored notes before more edits unless stronger evidence points elsewhere.
-- If decision is `search_papers`, run a narrow search tied to the bottleneck topic or promising frontier.
+- Use recent experiments, lessons, and paper notes as evidence.
+- Choose the next edit yourself.
 - Do not browse papers broadly when local optimization is still working.

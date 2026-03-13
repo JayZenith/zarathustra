@@ -6,7 +6,6 @@ import subprocess
 
 from experiment_db import ExperimentDB, ExperimentRecord
 from handoff import write_handoff
-from rule_engine import RuleDecision, decide_next_action
 from run_watcher import RunSummary, parse_run_log
 from state_store import RuntimeState, load_state, save_state
 
@@ -22,7 +21,6 @@ class LoggedRun:
     status: str
     summary: RunSummary | None
     experiment_id: int
-    rule_decision: RuleDecision
 
 
 def run_training(timeout_s: int = 720) -> int:
@@ -82,20 +80,17 @@ def ingest_run(
         description=description,
     )
 
-    decision = decide_next_action()
     _update_runtime_state(
         commit_hash=commit_hash,
         status=status,
         description=description,
         hypothesis=hypothesis,
-        decision=decision,
     )
     return LoggedRun(
         commit_hash=commit_hash,
         status=status,
         summary=summary,
         experiment_id=experiment_id,
-        rule_decision=decision,
     )
 
 
@@ -182,7 +177,6 @@ def _update_runtime_state(
     status: str,
     description: str,
     hypothesis: str,
-    decision: RuleDecision,
 ) -> None:
     old = load_state()
     state = RuntimeState(
@@ -191,9 +185,6 @@ def _update_runtime_state(
         last_status=status,
         last_description=description,
         last_hypothesis=hypothesis,
-        last_decision_action=decision.action,
-        last_decision_topic=decision.topic,
-        last_decision_reason=decision.reason,
     )
     save_state(state)
     write_handoff(state=state)

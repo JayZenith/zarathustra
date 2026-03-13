@@ -4,13 +4,11 @@ import argparse
 
 from experiment_db import ExperimentDB, ExperimentRecord
 from experiment_runner import ingest_run
-from next_experiment import choose_next_experiment
 from paper_fetch import fetch_arxiv_entry
 from paper_notes import fetch_and_store, find_notes, search_and_store
 from paper_search import search_arxiv
 from paper_summarize import format_summary, summarize_paper
 from research_memory import record_lesson, summarize_recent
-from rule_engine import decide_next_action
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -36,10 +34,6 @@ def build_parser() -> argparse.ArgumentParser:
 
     recent = sub.add_parser("recent")
     recent.add_argument("--limit", type=int, default=8)
-
-    nxt = sub.add_parser("next-experiment")
-
-    decide = sub.add_parser("decide")
 
     search = sub.add_parser("paper-search")
     search.add_argument("--query", required=True)
@@ -113,19 +107,10 @@ def main() -> int:
         print(summarize_recent(limit=args.limit))
         return 0
 
-    if args.command == "next-experiment":
-        idea = choose_next_experiment()
-        print(idea)
-        return 0
-
-    if args.command == "decide":
-        print(decide_next_action())
-        return 0
-
     if args.command == "paper-search":
         for candidate in search_arxiv(args.query, limit=args.limit):
             print(f"{candidate.title}\n{candidate.url}\n{candidate.published}\n")
-        return 0
+            return 0
 
     if args.command == "paper-search-store":
         for candidate in search_and_store(query=args.query, topic=args.topic, limit=args.limit):

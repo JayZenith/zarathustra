@@ -2,9 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from next_experiment import choose_next_experiment
+from experiment_db import ExperimentDB
 from research_memory import summarize_recent
-from rule_engine import decide_next_action
 from state_store import RuntimeState
 
 
@@ -13,8 +12,11 @@ HANDOFF_PATH = Path(__file__).resolve().parent / "AGENT_HANDOFF.md"
 
 def write_handoff(*, state: RuntimeState, path: Path = HANDOFF_PATH) -> None:
     recent = summarize_recent(limit=6)
-    decision = decide_next_action()
-    idea = choose_next_experiment()
+    db = ExperimentDB()
+    try:
+        best = db.best_experiment()
+    finally:
+        db.close()
 
     lines = [
         "# Agent Handoff",
@@ -29,28 +31,29 @@ def write_handoff(*, state: RuntimeState, path: Path = HANDOFF_PATH) -> None:
         "## Recent Experiments",
         recent,
         "",
-        "## Rule Decision",
-        f"- action: {decision.action}",
-        f"- topic: {decision.topic}",
-        f"- reason: {decision.reason}",
-        "",
-        "## Next Suggested Idea",
+        "## Best Experiment",
     ]
 
-    if idea is None:
+    if best is None:
         lines.append("- none")
     else:
-        lines.append(f"- description: {idea.description}")
-        lines.append(f"- hypothesis: {idea.hypothesis}")
-        lines.append(f"- topic: {idea.topic}")
+        lines.append(f'- val_bpb: {float(best["val_bpb"]):.6f}')
+        lines.append(f'- description: {best["description"]}')
+        if best["lesson"]:
+            lines.append(f'- lesson: {best["lesson"]}')
 
     lines.extend(
         [
-            "",
+        "",
+        "## Research Policy",
+        "- Use recent experiments, lessons, and paper notes as evidence.",
+        "- Choose the next edit yourself; the repo does not prescribe it.",
+        "- Record a concrete lesson every run.",
+        "",
             "## Commands",
             "- `python3 agent_cycle.py`",
             "- `python3 agent_brief.py`",
-            '- `python3 one_cycle.py --description "<change>" --hypothesis "<why>"`',
+            '- `python3 one_cycle.py --description "<change>" --hypothesis "<why>" --lesson "<learned>"`',
         ]
     )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
