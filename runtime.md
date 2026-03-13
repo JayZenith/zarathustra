@@ -19,7 +19,7 @@ python3 agent_cycle.py
 5. Run one training cycle:
 
 ```bash
-python3 one_cycle.py --description "<what changed>" --hypothesis "<why this might help>"
+python3 one_cycle.py --description "<what changed>" --hypothesis "<why this might help>" --lesson "<what this result would mean>"
 ```
 
 6. Read the new state again:
@@ -51,6 +51,7 @@ This is the narrow runtime glue:
 
 - Always run `python3 agent_cycle.py` before a new edit.
 - Always run `python3 one_cycle.py ...` after a committed edit.
+- Always include a concrete `--lesson` when running `python3 one_cycle.py ...`.
 - After every run, read `AGENT_HANDOFF.md` or run `python3 agent_cycle.py`.
 - Do not browse papers unless the rule engine says `read_notes` or `search_papers`.
 - Keep edits small unless the evidence clearly supports a larger move.

@@ -37,3 +37,8 @@ Training workflow:
 - Run training with `uv run train.py > run.log 2>&1`.
 - Parse results from `run.log`.
 - Log experiment outcomes into `experiments.db`.
+- Every experiment must include an explicit lesson.
+- When running `python3 one_cycle.py ...`, always pass:
+  - `--description`
+  - `--hypothesis`
+  - `--lesson`

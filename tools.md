@@ -31,7 +31,7 @@ python3 agent_runtime.py --agent-cmd 'codex exec -C {repo_root} "$(cat {prompt_f
 Run one actual training cycle:
 
 ```bash
-python3 one_cycle.py --description "batch reduction test" --hypothesis "more steps help on A100"
+python3 one_cycle.py --description "batch reduction test" --hypothesis "more steps help on A100" --lesson "If this wins, more steps matter more than larger batch throughput on A100."
 ```
 
 This automatically updates:
@@ -43,7 +43,7 @@ This automatically updates:
 If training was run separately and only the log needs to be recorded:
 
 ```bash
-python3 cli.py ingest-run --description "batch reduction test" --hypothesis "more steps help on A100"
+python3 cli.py ingest-run --description "batch reduction test" --hypothesis "more steps help on A100" --lesson "Batch reduction test completed."
 ```
 
 ## Experiment memory
