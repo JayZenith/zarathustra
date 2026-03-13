@@ -26,6 +26,7 @@ python3 one_cycle.py --description "<what changed>" --hypothesis "<why this migh
 
 ```bash
 python3 agent_cycle.py
+python3 loop_controller.py show
 ```
 
 7. Repeat.
@@ -34,5 +35,6 @@ python3 agent_cycle.py
 
 - Always run `python3 agent_cycle.py` before a new edit.
 - Always run `python3 one_cycle.py ...` after a committed edit.
+- After every run, read `AGENT_HANDOFF.md` or run `python3 agent_cycle.py`.
 - Do not browse papers unless the rule engine says `read_notes` or `search_papers`.
 - Keep edits small unless the evidence clearly supports a larger move.

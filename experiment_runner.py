@@ -5,8 +5,10 @@ from pathlib import Path
 import subprocess
 
 from experiment_db import ExperimentDB, ExperimentRecord
+from handoff import write_handoff
 from rule_engine import RuleDecision, decide_next_action
 from run_watcher import RunSummary, parse_run_log
+from state_store import RuntimeState, load_state, save_state
 
 
 REPO_ROOT = Path(__file__).resolve().parent
@@ -79,6 +81,13 @@ def ingest_run(
     )
 
     decision = decide_next_action()
+    _update_runtime_state(
+        commit_hash=commit_hash,
+        status=status,
+        description=description,
+        hypothesis=hypothesis,
+        decision=decision,
+    )
     return LoggedRun(
         commit_hash=commit_hash,
         status=status,
@@ -122,3 +131,26 @@ def _git_short_hash() -> str:
         text=True,
     )
     return completed.stdout.strip() or "nogit"
+
+
+def _update_runtime_state(
+    *,
+    commit_hash: str,
+    status: str,
+    description: str,
+    hypothesis: str,
+    decision: RuleDecision,
+) -> None:
+    old = load_state()
+    state = RuntimeState(
+        cycle_count=old.cycle_count + 1,
+        last_commit=commit_hash,
+        last_status=status,
+        last_description=description,
+        last_hypothesis=hypothesis,
+        last_decision_action=decision.action,
+        last_decision_topic=decision.topic,
+        last_decision_reason=decision.reason,
+    )
+    save_state(state)
+    write_handoff(state=state)

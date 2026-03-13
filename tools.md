@@ -9,6 +9,8 @@ Print the current research state and next actions:
 ```bash
 python3 agent_cycle.py
 python3 agent_brief.py
+python3 loop_controller.py show
+python3 loop_controller.py refresh
 ```
 
 ## Training run
@@ -18,6 +20,12 @@ Run one actual training cycle:
 ```bash
 python3 one_cycle.py --description "batch reduction test" --hypothesis "more steps help on A100"
 ```
+
+This automatically updates:
+- `experiments.db`
+- `results.tsv`
+- `runtime_state.json`
+- `AGENT_HANDOFF.md`
 
 If training was run separately and only the log needs to be recorded:
 
