@@ -1,0 +1,9 @@
+[project]
+name = "zarathustra"
+version = "0.1.0"
+description = "Minimal research-loop extension for autoresearch"
+requires-python = ">=3.10"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
