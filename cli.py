@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 
 from experiment_db import ExperimentDB, ExperimentRecord
+from experiment_runner import ingest_run
 from next_experiment import choose_next_experiment
 from paper_fetch import fetch_arxiv_entry
 from paper_notes import fetch_and_store, find_notes, search_and_store
@@ -62,6 +63,12 @@ def build_parser() -> argparse.ArgumentParser:
     summarize.add_argument("--title", required=True)
     summarize.add_argument("--abstract", required=True)
     summarize.add_argument("--topic", required=True)
+
+    ingest = sub.add_parser("ingest-run")
+    ingest.add_argument("--description", required=True)
+    ingest.add_argument("--hypothesis", default="")
+    ingest.add_argument("--lesson", default="")
+    ingest.add_argument("--status", choices=("keep", "discard", "crash"))
 
     return parser
 
@@ -140,6 +147,17 @@ def main() -> int:
 
     if args.command == "paper-summarize":
         print(format_summary(summarize_paper(title=args.title, abstract=args.abstract, topic=args.topic)))
+        return 0
+
+    if args.command == "ingest-run":
+        print(
+            ingest_run(
+                description=args.description,
+                hypothesis=args.hypothesis,
+                lesson=args.lesson,
+                forced_status=args.status,
+            )
+        )
         return 0
 
     parser.error("unknown command")

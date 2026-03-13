@@ -2,6 +2,20 @@
 
 Use these commands from `/home/jay-zenith/Desktop/zarathustra`.
 
+## Training run
+
+Run one actual training cycle:
+
+```bash
+python3 one_cycle.py --description "batch reduction test" --hypothesis "more steps help on A100"
+```
+
+If training was run separately and only the log needs to be recorded:
+
+```bash
+python3 cli.py ingest-run --description "batch reduction test" --hypothesis "more steps help on A100"
+```
+
 ## Experiment memory
 
 ```bash
