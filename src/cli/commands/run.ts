@@ -8,7 +8,7 @@ import { createOrResumeSession } from "../../runtime/session.js";
 export async function runCommand(repo: MemoryRepo, args: string[]): Promise<void> {
   const settings = loadRuntimeSettings();
   const maxCycles = readNumberFlag(args, "--cycles");
-  const delayMs = readNumberFlag(args, "--delay-ms") ?? settings.restart_delay_ms;
+  const delayMs = readNumberFlag(args, "--delay-ms") ?? settings.relaunch_delay_ms ?? settings.restart_delay_ms;
   const maxDelayMs = readNumberFlag(args, "--max-delay-ms") ?? settings.max_restart_delay_ms;
   const workdir = readStringFlag(args, "--cwd") ?? settings.workdir ?? process.cwd();
   const driverCmd = readStringFlag(args, "--driver") ?? process.env.ZARATHUSTRA_AGENT_CMD ?? settings.agent_command;

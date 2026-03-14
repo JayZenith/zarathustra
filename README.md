@@ -3,7 +3,7 @@
 `zarathustra` is a persistent host for an autonomous CLI agent.
 
 It does three things:
-- keeps the agent alive across cycles
+- keeps one agent process running and relaunches it only after exit/crash
 - stores runs, experiments, and paper notes in SQLite
 - rehydrates the agent with `program.md`, `tools.md`, and compact prior state
 
@@ -18,7 +18,7 @@ Example `zarathustra.json`:
   "agent_command": "codex exec \"$(cat \\\"$ZARATHUSTRA_HANDOFF\\\")\"",
   "goal": "Continue autonomous research in this repo.",
   "workdir": ".",
-  "restart_delay_ms": 2000
+  "relaunch_delay_ms": 2000
 }
 ```
 
@@ -35,6 +35,8 @@ bun install
 bun run check
 bun run src/cli/index.ts start
 ```
+
+`relaunch_delay_ms` is only used after the agent process exits.
 
 Useful commands:
 

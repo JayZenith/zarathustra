@@ -6,6 +6,7 @@ export interface RuntimeSettings {
   goal?: string;
   workdir?: string;
   restart_delay_ms?: number;
+  relaunch_delay_ms?: number;
   max_restart_delay_ms?: number;
 }
 
