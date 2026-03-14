@@ -1,31 +1,23 @@
 #!/usr/bin/env bun
 import { MemoryRepo } from "../memory/repo.js";
-import { attachCommand } from "./commands/attach.js";
+import { dbCommand } from "./commands/db.js";
+import { experimentLogCommand } from "./commands/experiment_log.js";
+import { paperFetchCommand } from "./commands/paper_fetch.js";
+import { paperSearchCommand } from "./commands/paper_search.js";
 import { runCommand } from "./commands/run.js";
 import { statusCommand } from "./commands/status.js";
-import { tuiCommand } from "./commands/tui.js";
-import { dbCommand } from "./commands/db.js";
-import { paperSearchCommand } from "./commands/paper_search.js";
-import { paperFetchCommand } from "./commands/paper_fetch.js";
 
 async function main(): Promise<void> {
   const [, , command, ...args] = process.argv;
   const repo = new MemoryRepo();
 
   switch (command) {
-    case "attach":
-      requireArg(args[0], "attach requires a target config path");
-      await attachCommand(repo, args[0]!);
-      break;
+    case "start":
     case "run":
-      requireArg(args[0], "run requires a target name");
-      await runCommand(repo, args[0]!, args[1] ? Number(args[1]) : undefined);
+      await runCommand(repo, args);
       break;
     case "status":
       statusCommand(repo);
-      break;
-    case "tui":
-      tuiCommand(repo);
       break;
     case "db":
       requireArg(args[0], "db requires a SQL string");
@@ -37,7 +29,11 @@ async function main(): Promise<void> {
       break;
     case "paper-fetch":
       requireArg(args[0], "paper-fetch requires an arXiv URL or id");
-      await paperFetchCommand(args[0]!);
+      await paperFetchCommand(repo, args[0]!);
+      break;
+    case "experiment-log":
+      requireArg(args[0], "experiment-log requires a JSON payload");
+      experimentLogCommand(repo, args[0]!);
       break;
     default:
       printHelp();
@@ -56,13 +52,13 @@ function printHelp(): void {
       "zarathustra",
       "",
       "commands:",
-      "  attach <target.yaml>",
-      "  run <target-name> [max-cycles]",
+      "  start [goal text] [--driver <cmd>] [--cwd <path>] [--cycles <n>] [--delay-ms <ms>]",
+      "  run   [same as start]",
       "  status",
-      "  tui",
       "  db \"<sql>\"",
       "  paper-search <query>",
-      "  paper-fetch <url-or-id>"
+      "  paper-fetch <url-or-id>",
+      "  experiment-log '<json>'",
     ].join("\n") + "\n",
   );
 }

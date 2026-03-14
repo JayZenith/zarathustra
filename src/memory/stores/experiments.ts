@@ -6,6 +6,8 @@ export function recordExperiment(
   repo: MemoryRepo,
   sessionId: string,
   hypothesis: string,
+  label: string | null = null,
+  changeSummary: string | null = null,
   status = "planned",
 ): string {
   const id = createId("exp");
@@ -13,12 +15,29 @@ export function recordExperiment(
     .query(
       `
         insert into experiments (
-          id, session_id, hypothesis, status, started_at
-        ) values (?, ?, ?, ?, ?)
+          id, session_id, label, hypothesis, change_summary, status, started_at
+        ) values (?, ?, ?, ?, ?, ?, ?)
       `,
     )
-    .run(id, sessionId, hypothesis, status, nowIso());
+    .run(id, sessionId, label, hypothesis, changeSummary, status, nowIso());
   return id;
+}
+
+export function completeExperiment(
+  repo: MemoryRepo,
+  experimentId: string,
+  status: string,
+  changeSummary?: string,
+): void {
+  repo.db
+    .query(
+      `
+        update experiments
+        set status = ?, change_summary = coalesce(?, change_summary), ended_at = ?
+        where id = ?
+      `,
+    )
+    .run(status, changeSummary ?? null, nowIso(), experimentId);
 }
 
 export function recordExperimentMetric(

@@ -1,0 +1,6 @@
+{
+  "agent_command": "codex exec \"$(cat \\\"$ZARATHUSTRA_HANDOFF\\\")\"",
+  "goal": "Continue autonomous work in the current repository.",
+  "workdir": ".",
+  "restart_delay_ms": 2000
+}

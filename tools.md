@@ -1,22 +1,31 @@
 # zarathustra tools
 
-Use this file for the runtime tool surface, not for research strategy.
+Use these commands yourself when needed.
 
-## Main commands
+## Runtime
 
 ```bash
-bun run src/cli/index.ts attach <target.yaml>
-bun run src/cli/index.ts run <target-name> [max-cycles]
 bun run src/cli/index.ts status
-bun run src/cli/index.ts tui
 bun run src/cli/index.ts db "<sql>"
+```
+
+## Papers
+
+```bash
 bun run src/cli/index.ts paper-search "<query>"
 bun run src/cli/index.ts paper-fetch <url-or-id>
 ```
 
-## Rules
+`paper-fetch` also stores a paper note in the DB for the latest session.
 
-- `program.md` governs behavior.
-- `tools.md` only describes available runtime commands.
-- Logs stay in `var/runs/` unless a small slice is needed.
-- Memory and paper tools support reasoning; they do not replace it.
+## Experiments
+
+```bash
+bun run src/cli/index.ts experiment-log '<json>'
+```
+
+Example:
+
+```json
+{"hypothesis":"lower wd helps","status":"completed","change_summary":"wd 0.15 -> 0.145","primary_metric":"val_bpb","metrics":{"val_bpb":0.9661}}
+```

@@ -21,7 +21,7 @@ export function startCycle(repo: MemoryRepo, sessionId: string, cycleIndex: numb
   return { id, cycleIndex };
 }
 
-export function finishCycle(repo: MemoryRepo, cycleId: string, summary: string): void {
+export function finishCycle(repo: MemoryRepo, cycleId: string, summary: string, status = "completed"): void {
   repo.db
     .query(
       `
@@ -30,5 +30,5 @@ export function finishCycle(repo: MemoryRepo, cycleId: string, summary: string):
         where id = ?
       `,
     )
-    .run("completed", summary, nowIso(), cycleId);
+    .run(status, summary, nowIso(), cycleId);
 }

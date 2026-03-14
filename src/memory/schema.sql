@@ -1,20 +1,25 @@
-create table if not exists targets (
-  id integer primary key autoincrement,
-  name text not null unique,
-  repo_path text not null,
-  config_json text not null,
-  created_at text not null,
+create table if not exists sessions (
+  id text primary key,
+  status text not null,
+  goal text not null,
+  driver_cmd text not null,
+  workdir text not null,
+  lease_owner text,
+  lease_expires_at text,
+  last_heartbeat_at text,
+  last_exit_code integer,
+  restart_count integer,
+  consecutive_failures integer,
+  next_wake_at text,
+  started_at text not null,
   updated_at text not null
 );
 
-create table if not exists sessions (
+create table if not exists wake_events (
   id text primary key,
-  target_id integer not null references targets(id),
-  status text not null,
-  lease_owner text,
-  lease_expires_at text,
-  started_at text not null,
-  updated_at text not null
+  session_id text not null references sessions(id),
+  reason text not null,
+  created_at text not null
 );
 
 create table if not exists cycles (
@@ -24,27 +29,6 @@ create table if not exists cycles (
   status text not null,
   prompt_snapshot_id text,
   summary text,
-  started_at text not null,
-  ended_at text
-);
-
-create table if not exists prompt_snapshots (
-  id text primary key,
-  session_id text not null references sessions(id),
-  cycle_id text references cycles(id),
-  input_text text not null,
-  token_estimate integer not null,
-  created_at text not null
-);
-
-create table if not exists tool_calls (
-  id text primary key,
-  cycle_id text not null references cycles(id),
-  tool text not null,
-  args_json text not null,
-  status text not null,
-  summary text,
-  artifact_id text,
   started_at text not null,
   ended_at text
 );

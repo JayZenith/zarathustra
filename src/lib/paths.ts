@@ -7,7 +7,8 @@ const repoRoot = path.resolve(here, "..", "..");
 export const PATHS = {
   repoRoot,
   program: path.join(repoRoot, "program.md"),
-  targetsDir: path.join(repoRoot, "targets"),
+  tools: path.join(repoRoot, "tools.md"),
+  settings: path.join(repoRoot, "zarathustra.json"),
   varDir: path.join(repoRoot, "var"),
   runsDir: path.join(repoRoot, "var", "runs"),
   cacheDir: path.join(repoRoot, "var", "cache"),

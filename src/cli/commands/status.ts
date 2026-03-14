@@ -6,14 +6,16 @@ export function statusCommand(repo: MemoryRepo): void {
     process.stdout.write("no sessions\n");
     return;
   }
-  const target = repo.listTargets().find((record) => record.id === session.target_id);
   process.stdout.write(
     JSON.stringify(
       {
         session,
-        target,
         cycles: repo.getCycles(session.id),
-        findings: repo.getFindings(session.id)
+        findings: repo.getFindings(session.id),
+        experiments: repo.getExperiments(session.id),
+        papers: repo.getPaperNotes(session.id),
+        wake_events: repo.getWakeEvents(session.id),
+        stats: repo.getSessionStats(session.id),
       },
       null,
       2,

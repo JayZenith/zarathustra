@@ -1,25 +1,46 @@
 # zarathustra
 
-`zarathustra` is a Bun + TypeScript autonomous research-agent runtime.
+`zarathustra` is a persistent host for an autonomous CLI agent.
 
-It is built for strong autonomous research loops first, without hardcoding a
-single benchmark into the runtime.
+It does three things:
+- keeps the agent alive across cycles
+- stores runs, experiments, and paper notes in SQLite
+- rehydrates the agent with `program.md`, `tools.md`, and compact prior state
 
-## Principles
+## Setup
 
-- one main agent
-- canonical brain in [`program.md`](./program.md)
-- target-specific behavior from attached config
-- SQLite durable memory
-- compact context, external artifacts
-- tools serve judgment
+Create `zarathustra.json` or export `ZARATHUSTRA_AGENT_CMD`.
 
-## Core commands
+Example `zarathustra.json`:
+
+```json
+{
+  "agent_command": "codex exec \"$(cat \\\"$ZARATHUSTRA_HANDOFF\\\")\"",
+  "goal": "Continue autonomous research in this repo.",
+  "workdir": ".",
+  "restart_delay_ms": 2000
+}
+```
+
+Or:
+
+```bash
+cp zarathustra.example.json zarathustra.json
+```
+
+## Run
 
 ```bash
 bun install
 bun run check
-bun run src/cli/index.ts attach targets/autoresearch.example.yaml
-bun run src/cli/index.ts run autoresearch
+bun run src/cli/index.ts start
+```
+
+Useful commands:
+
+```bash
 bun run src/cli/index.ts status
+bun run src/cli/index.ts db "select * from experiments order by started_at desc limit 5"
+bun run src/cli/index.ts paper-search "optimizer scaling law"
+bun run src/cli/index.ts paper-fetch 1706.03762
 ```
